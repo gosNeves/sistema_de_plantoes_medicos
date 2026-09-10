@@ -149,3 +149,4 @@ def checagem(matrizA,matrizB):
                 if matrizB[i][2]<1:
                     print(f"Motivo: Faltam CIRURGIÕES de {turnos[i]}!")
 menu()
+print("\nTestando branch 'Dev'\n")
