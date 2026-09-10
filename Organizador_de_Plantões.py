@@ -149,4 +149,4 @@ def checagem(matrizA,matrizB):
                 if matrizB[i][2]<1:
                     print(f"Motivo: Faltam CIRURGIÕES de {turnos[i]}!")
 menu()
-#Simulando uma correção de bugs sobre a branch principal
+#Problema resolvido, agora quero fazer "merge" desta mensagem para a branch "main"
