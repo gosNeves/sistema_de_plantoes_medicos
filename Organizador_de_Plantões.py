@@ -150,3 +150,4 @@ def checagem(matrizA,matrizB):
                     print(f"Motivo: Faltam CIRURGIÕES de {turnos[i]}!")
 menu()
 print("\nTestando branch 'Dev'\n")
+#Adicionando mais um comentário para testes
