@@ -8,11 +8,14 @@ class Medico:
         self.disp_n = disp_n
 def menu():
     medicos = [None] * 140
+    semana = []
+    for i in range(7):
+        semana.append([[],[],[]])
     while True: 
         print("=== Menu Principal ===")
         print("=== Escolha uma opção ===")
         try:
-            opcao = int(input("(1) => Cadastro, (2) => Consulta, (3) => Encerrar Programa"))
+            opcao = int(input("(1) => Cadastro, (2) => Consulta, (3) => Construção de Escalas, (4) => Encerrar Programa"))
         except ValueError:
             print("Valor Inválido")
             continue
@@ -21,6 +24,8 @@ def menu():
         elif opcao == 2:
             consulta(medicos)
         elif opcao == 3:
+            construção(medicos,semana)
+        elif opcao == 4:
             print("Encerrando Programa")
             break
         else: 
@@ -143,14 +148,127 @@ def consulta(lista):
             print(f"Disponível de NOITE? => {disponibilidade[lista[i].disp_n]}")
     else:
         print("Valor Inválido")
-def construção():
+def construção(lista, matriz):
     print("=== Menu de Construção de Turnos ===")
     while True:
-        print("Escolha um dia da semana:")
         try:
-            opcao = int(input("(1) => Domingo, (2) => Segunda, (3) => Terça, (4) => Quarta, (5) => Quinta, (6) => Sexta, (7) => Sábado"))
+            opcao = int(input("(1) => Construir Escalas, (2) => Sair"))
         except ValueError:
             print("Valor inválido")
             continue
-        
+        if opcao == 1:
+            if any(medico is not None in lista for medico in lista):
+                while True:
+                    print("Escolha um dia da semana:")
+                    try:
+                        opcao_d = int(input("(1) => Domingo, (2) => Segunda, (3) => Terça, (4) => Quarta, (5) => Quinta, (6) => Sexta, (7) => Sábado"))
+                    except ValueError:
+                        print("Opção inválida")
+                        continue
+                    print("Escolha um turno:")
+                    try:
+                        opcao_t = int(input("(1) => Manhã, (2) => Tarde, (3) => Noite"))
+                    except ValueError:
+                        print("Opção inválida")
+                        continue
+                    x = opcao_d - 1
+                    y = opcao_t - 1
+                    cadastro_escala(x,y,lista,matriz)
+                    break
+            else:
+                print("Não há cadastros no sistema. Cadastre pelo menos um médico para prosseguir!")
+        elif opcao == 2:
+            print("=== Retornando ao menu principal ===")
+            break
+        else: 
+            print("Opção inválida")
+            continue
+def cadastro_escala(x,y,lista,matriz):
+    dias = {0:"Domingo", 1:"Segunda", 2:"Terça", 3:"Quarta", 4:"Quinta", 5:"Sexta", 6:"Sábado"}
+    turnos = {0:"Manhã", 1:"Tarde", 2:"Noite"}
+    print(f"Você está no turno de {dias[x]} no período da {turnos[y]}")
+    continuar = True
+    while continuar:
+        if any(medico.espec == "1" and medico.disp_m == "1" for medico in lista if medico is not None):
+            print("Você tem a disposição os seguintes CLÍNICOS GERAIS:")
+            cont = 0
+            for i in range(len(lista)):  
+                if lista[i] is None:
+                    continue
+                elif lista[i].disp_m == "1" and lista[i].espec == "1":
+                    ident = i + 1
+                    cont = cont + 1
+                    print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}")
+            matriz[x][y].append(int(input("Digite um ID")))
+            print("Deseja cadastrar outro CLÍNICO GERAL?")
+            while True:
+                opcao = input("Digite '1' para SIM e '2' para NÃO:")
+                if opcao == "1":
+                    break
+                elif opcao == "2":
+                    continuar = False
+                    break
+                else:
+                    print("Opção inválida, digite apenas '1' para SIM ou '2' para NÃO!")
+                    continue
+        else:
+            print(f"Você não possui Clínicos Gerais disponíveis no período da {turnos[y]}")
+            break
+    continuar = True
+    while continuar:
+        if any(medico.espec == "2" and medico.disp_m == "1" for medico in lista if medico is not None):
+            print("Você tem a disposição os seguintes PEDIATRAS:")
+            cont = 0
+            for i in range(len(lista)):  
+                if lista[i] is None:
+                    continue
+                elif lista[i].disp_m == "1" and lista[i].espec == "2":
+                    ident = i + 1
+                    print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}")
+                    cont = cont + 1
+            matriz[x][y].append(int(input("Digite um ID")))
+            print("Deseja cadastrar outro PEDIATRA?")
+            while True:
+                opcao = input("Digite '1' para SIM e '2' para NÃO:")
+                if opcao == "1":
+                    break
+                elif opcao == "2":
+                    continuar = False
+                    break
+                else:
+                    print("Opção inválida, digite apenas '1' para SIM ou '2' para NÃO!")
+                    continue
+        else:
+            print(f"Você não possui Pediatras disponíveis no período da {turnos[y]}")
+            break
+    continuar = True
+    while continuar:
+        if any(medico.espec == "3" and medico.disp_m == "1" for medico in lista if medico is not None):
+            print("Você tem a disposição os seguintes CIRURGIÕES:")
+            cont = 0
+            for i in range(len(lista)):  
+                if lista[i] is None:
+                    continue
+                elif lista[i].disp_m == "1" and lista[i].espec == "3":
+                    ident = i + 1
+                    print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}")
+                    cont = cont + 1
+            matriz[x][y].append(int(input("Digite um ID")))
+            print("Deseja cadastrar outro CIRURGIÃO?")
+            while True:
+                opcao = input("Digite '1' para SIM e '2' para NÃO:")
+                if opcao == "1":
+                    break
+                elif opcao == "2":
+                    continuar = False
+                    break
+                else:
+                    print("Opção inválida, digite apenas '1' para SIM ou '2' para NÃO!")
+                    continue
+        else:
+            print(f"Você não possui Cirurgiões disponíveis no período da {turnos[y]}")
+            break
+    print("Escala Salva! Retornando ao menu de Construção de Escalas")
+    return matriz
+#def checagens():
 menu()
