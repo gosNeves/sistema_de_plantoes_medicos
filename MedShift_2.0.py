@@ -6,6 +6,7 @@ class Medico:
         self.disp_m = disp_m
         self.disp_t = disp_t
         self.disp_n = disp_n
+        self.qtd_t = [0] * 7
 def menu():
     medicos = [None] * 140
     semana = []
@@ -173,6 +174,7 @@ def construção(lista, matriz):
                         continue
                     x = opcao_d - 1
                     y = opcao_t - 1
+                    atualizacao(x,y,lista,matriz,operacao=-1)
                     cadastro_escala(x,y,lista,matriz)
                     break
             else:
@@ -186,6 +188,8 @@ def construção(lista, matriz):
 def cadastro_escala(x,y,lista,matriz):
     dias = {0:"Domingo", 1:"Segunda", 2:"Terça", 3:"Quarta", 4:"Quinta", 5:"Sexta", 6:"Sábado"}
     turnos = {0:"Manhã", 1:"Tarde", 2:"Noite"}
+    erros_dict = {1:"Erro! Limite diário de escalas excedido.", 2:"Erro! O profissional já está escalado no turno noturno anterior",
+             3:"Erro! O profissional já está escalado no turno matutino posterior.", 4:"Erro! Limite semanal de escalas excedido"}
     print(f"Você está no turno de {dias[x]} no período da {turnos[y]}")
     continuar = True
     while continuar:
@@ -199,7 +203,17 @@ def cadastro_escala(x,y,lista,matriz):
                     ident = i + 1
                     cont = cont + 1
                     print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}")
-            matriz[x][y].append(int(input("Digite um ID")))
+            while True:
+                id_med = int(input("Digite um ID"))
+                erros = checagens(lista,matriz,x,y,id_med)
+                if not erros:
+                    matriz[x][y].append(id_med)
+                    atualizacao(x,y,lista,matriz,operacao=1)
+                    break
+                else:
+                    for i in erros:
+                        print(erros_dict[i])
+                    continue
             print("Deseja cadastrar outro CLÍNICO GERAL?")
             while True:
                 opcao = input("Digite '1' para SIM e '2' para NÃO:")
@@ -227,6 +241,7 @@ def cadastro_escala(x,y,lista,matriz):
                     print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}")
                     cont = cont + 1
             matriz[x][y].append(int(input("Digite um ID")))
+            atualizacao(x,y,lista,matriz,operacao=1)
             print("Deseja cadastrar outro PEDIATRA?")
             while True:
                 opcao = input("Digite '1' para SIM e '2' para NÃO:")
@@ -254,6 +269,7 @@ def cadastro_escala(x,y,lista,matriz):
                     print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}")
                     cont = cont + 1
             matriz[x][y].append(int(input("Digite um ID")))
+            atualizacao(x,y,lista,matriz,operacao=1)
             print("Deseja cadastrar outro CIRURGIÃO?")
             while True:
                 opcao = input("Digite '1' para SIM e '2' para NÃO:")
@@ -270,5 +286,33 @@ def cadastro_escala(x,y,lista,matriz):
             break
     print("Escala Salva! Retornando ao menu de Construção de Escalas")
     return matriz
-#def checagens():
+def checagens(lista,matriz,x,y,id_med):
+    erros = [] 
+    prox_dia = (x+1)%7
+    dia_ant = (6+x)%7
+    total_semana = sum(lista[id_med-1].qtd_t)
+    #1 No máximo 2 turnos no mesmo dia
+    if lista[id_med-1].qtd_t[x] >= 2:
+        erros.append(1)        
+    #2 Turno noturno não pode ser seguido de matutino e vice-versa
+    if y == 0: 
+        if id_med in matriz[dia_ant][2] and id_med in matriz[x][0]:
+            erros.append(2)
+    elif y == 2:
+        if id_med in matriz[x][2] and id_med in matriz[prox_dia][0]:
+            erros.append(3)
+    #3 Máximo de 8 turnos na semana
+    if total_semana >= 8:
+        erros.append(4)
+    return erros
+def atualizacao(x,y,lista,matriz,operacao):
+    for id in matriz[x][y]:
+        lista[id-1].qtd_t[x] += operacao
+
+    
+
+#def validação(): Executa as validações dos turnos conforme as regras pré estabelecidas
+#def validação_semanal(): Adiciona as funções adicionais previstas na terceira sprint
+#def media_escalas():
+#def cobertura_turnos():
 menu()
