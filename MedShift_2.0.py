@@ -16,7 +16,7 @@ def menu():
         print("=== Menu Principal ===")
         print("=== Escolha uma opção ===")
         try:
-            opcao = int(input("(1) => Cadastro, (2) => Consulta, (3) => Construção de Escalas, (4) => Encerrar Programa"))
+            opcao = int(input("(1) => Cadastro, (2) => Consulta, (3) => Construção de Escalas, (4) => Menu de Validações, (5) => Encerrar Programa"))
         except ValueError:
             print("Valor Inválido")
             continue
@@ -27,6 +27,8 @@ def menu():
         elif opcao == 3:
             construção(medicos,semana)
         elif opcao == 4:
+            validacao()
+        elif opcao == 5:
             print("Encerrando Programa")
             break
         else: 
@@ -204,16 +206,22 @@ def cadastro_escala(x,y,lista,matriz):
                     cont = cont + 1
                     print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}")
             while True:
-                id_med = int(input("Digite um ID"))
-                erros = checagens(lista,matriz,x,y,id_med)
-                if not erros:
-                    matriz[x][y].append(id_med)
-                    atualizacao(x,y,lista,matriz,operacao=1)
-                    break
-                else:
-                    for i in erros:
-                        print(erros_dict[i])
+                try:
+                    id_med = int(input("Digite um ID"))
+                except ValueError:
+                    print("Valor inválido!")
                     continue
+                if id_med > 0 and id_med < 141:
+                    erros = checagens(lista,matriz,x,y,id_med)
+                    if not erros:
+                        matriz[x][y].append(id_med)
+                        atualizacao(x,y,lista,matriz,operacao=1)
+                        break
+                    else:
+                        for i in erros:
+                            print(erros_dict[i])
+                else: 
+                    print("Valor Inválido")
             print("Deseja cadastrar outro CLÍNICO GERAL?")
             while True:
                 opcao = input("Digite '1' para SIM e '2' para NÃO:")
@@ -239,9 +247,23 @@ def cadastro_escala(x,y,lista,matriz):
                 elif lista[i].disp_m == "1" and lista[i].espec == "2":
                     ident = i + 1
                     print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}")
-                    cont = cont + 1
-            matriz[x][y].append(int(input("Digite um ID")))
-            atualizacao(x,y,lista,matriz,operacao=1)
+            while True:
+                try:
+                    id_med = int(input("Digite um ID"))
+                except ValueError:
+                    print("Valor inválido!")
+                    continue
+                if id_med > 0 and id_med < 141:
+                    erros = checagens(lista,matriz,x,y,id_med)
+                    if not erros:
+                        matriz[x][y].append(id_med)
+                        atualizacao(x,y,lista,matriz,operacao=1)
+                        break
+                    else:
+                        for i in erros:
+                            print(erros_dict[i])
+                else: 
+                    print("Valor Inválido")
             print("Deseja cadastrar outro PEDIATRA?")
             while True:
                 opcao = input("Digite '1' para SIM e '2' para NÃO:")
@@ -266,10 +288,25 @@ def cadastro_escala(x,y,lista,matriz):
                     continue
                 elif lista[i].disp_m == "1" and lista[i].espec == "3":
                     ident = i + 1
-                    print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}")
                     cont = cont + 1
-            matriz[x][y].append(int(input("Digite um ID")))
-            atualizacao(x,y,lista,matriz,operacao=1)
+                    print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}")
+            while True:
+                try:
+                    id_med = int(input("Digite um ID"))
+                except ValueError:
+                    print("Valor inválido!")
+                    continue
+                if id_med > 0 and id_med < 141:
+                    erros = checagens(lista,matriz,x,y,id_med)
+                    if not erros:
+                        matriz[x][y].append(id_med)
+                        atualizacao(x,y,lista,matriz,operacao=1)
+                        break
+                    else:
+                        for i in erros:
+                            print(erros_dict[i])
+                else: 
+                    print("Valor Inválido")
             print("Deseja cadastrar outro CIRURGIÃO?")
             while True:
                 opcao = input("Digite '1' para SIM e '2' para NÃO:")
@@ -308,11 +345,101 @@ def checagens(lista,matriz,x,y,id_med):
 def atualizacao(x,y,lista,matriz,operacao):
     for id in matriz[x][y]:
         lista[id-1].qtd_t[x] += operacao
+def validacao(lista,matriz):
+    while True: 
+        print("=== Menu de Validações ===")
+        print("=== Escolha uma opção ===")
+        try:
+            opcao = int(input("(1) => Validação Diária, (2) => Validação Semanal, (3) => Sair"))
+        except ValueError:
+            print("Valor Inválido")
+            continue
+        if opcao == 1:
+            validacao_diaria(lista,matriz)
+        elif opcao == 2:
+            validacao_semanal(lista,matriz)
+        elif opcao == 3:
+            print("Retornando ao Menu Principal")
+            break
+        else: 
+            print("Opção Inválida") 
+def validacao_diaria(lista,matriz):
+    dias = {0:"Domingo", 1:"Segunda", 2:"Terça", 3:"Quarta", 4:"Quinta", 5:"Sexta", 6:"Sábado"}
+    turnos = {0:"Manhã", 1:"Tarde", 2:"Noite"}
+    erros_dict = {0:"Turno Aprovado", 1:"Erro! Faltam Clinicos Gerais", 2:"Erro! Faltam Pediatras", 3:"Erro! Faltam Cirurgiões", 4:"Plantão 24 Hrs Aprovado!"}
+    erros =[]
+    while True: 
+        print("=== Validações de Escalas ===")
+        print("=== Escolha um dia ===")
+        try:
+            x = int(input("(1) => Domingo, (2) => Segunda, (3) => Terça, (4) => Quarta, (5) => Quinta, (6) => Sexta, (7) => Sábado"))
+        except ValueError:
+            print("Valor Inválido")
+            continue
+        print("=== Qual turno você deseja validar? ===")
+        try:
+            y = int(input("(1) => Manhã, (2) => Tarde, (3) => Noite, (4) => Plantão 24 Hrs (3 Turnos Juntos)"))
+        except ValueError:
+            print("Valor Inválido")
+            continue
+        x = x-1
+        y = y-1
+        if y == 3:
+            #Validação do Plantão 24 Hrs
+            turno_M = contagem_espec(x,0,lista,matriz)
+            turno_T = contagem_espec(x,1,lista,matriz)
+            turno_N = contagem_espec(x,2,lista,matriz)
+            turnos_dia = [turno_M,turno_T,turno_N]
+            cl =[]
+            p =[]
+            c=[]
+            for turno in turnos_dia:
+                cl.append(max(0, 2-turno[0]))
+                p.append(max(0, 1-turno[1]))
+                c.append(max(0, 1-turno[2]))
+            if any(cl) or any(p) or any(c): 
+                for n in range(3):
+                    if cl[n] > 0:
+                        print(f"Erro! Faltam {cl[n]} Clínicos Gerais no turno da {turnos[n]}")
+                    if p[n] > 0:
+                        print(f"Erro! Faltam {p[n]} Pediatras no turno da {turnos[n]}")
+                    if c[n] > 0:
+                        print(f"Erro! Faltam {c[n]} Cirurgiões no turno da {turnos[n]}")
+            else:
+                print(erros_dict[4])          
+            break
+        elif y in turnos:
+            #Validação do turno específico e impressão de relatórios
+            print(f"Você selecionou o turno de {dias[x]} de {turnos[y]}")
+            espec_quant = contagem_espec(x,y,lista,matriz)
+            if espec_quant[0] < 2:
+                erros.append(1)
+            if espec_quant[1] < 1:
+                erros.append(2)
+            if espec_quant[2] < 1:
+                erros.append(3)
+            if not erros:
+                erros.append(0)
+            print(f"Você possui {espec_quant[0]} Clínicos Gerais cadastrados")
+            print(f"Você possui {espec_quant[1]} Pediatras cadastrados")
+            print(f"Você possui {espec_quant[2]} Cirurgiões cadastrados")
+            for i in erros:
+                print(erros_dict[i])
+            break
+        else: 
+            print("Opção Inválida") 
+def contagem_espec(x,y,lista,matriz):
+    espec = []
+    for id in matriz[x][y]:
+        espec.append(lista[id-1].espec)
+    cl = espec.count("1")
+    p = espec.count("2")
+    c = espec.count("3")
+    espec_quant = [cl,p,c]
+    return espec_quant
 
-    
-
-#def validação(): Executa as validações dos turnos conforme as regras pré estabelecidas
-#def validação_semanal(): Adiciona as funções adicionais previstas na terceira sprint
+#def validacao_semanal(lista,matriz):
 #def media_escalas():
 #def cobertura_turnos():
+#def validação_semana():
 menu()
