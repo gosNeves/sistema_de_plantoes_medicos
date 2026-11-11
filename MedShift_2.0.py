@@ -27,7 +27,7 @@ def menu():
         elif opcao == 3:
             construção(medicos,semana)
         elif opcao == 4:
-            validacao()
+            validacao(medicos,semana)
         elif opcao == 5:
             print("Encerrando Programa")
             break
@@ -367,6 +367,7 @@ def validacao_diaria(lista,matriz):
     dias = {0:"Domingo", 1:"Segunda", 2:"Terça", 3:"Quarta", 4:"Quinta", 5:"Sexta", 6:"Sábado"}
     turnos = {0:"Manhã", 1:"Tarde", 2:"Noite"}
     erros_dict = {0:"Turno Aprovado", 1:"Erro! Faltam Clinicos Gerais", 2:"Erro! Faltam Pediatras", 3:"Erro! Faltam Cirurgiões", 4:"Plantão 24 Hrs Aprovado!"}
+    espec_dict = {0:"Clínicos Gerais", 1:"Pediatras", 2:"Cirurgiões"}
     erros =[]
     while True: 
         print("=== Validações de Escalas ===")
@@ -393,6 +394,13 @@ def validacao_diaria(lista,matriz):
             cl =[]
             p =[]
             c=[]
+            for i in range(len(turnos_dia)):
+                print(f"\nTurno da {turnos[i]}")
+                if all(j == 0 for j in turnos_dia[i]):
+                    print("O turno não possui profissionais cadastrados")
+                else:
+                    for espec in range(len(turnos_dia[i])):
+                        print(f"Você possui {turnos_dia[i][espec]} {espec_dict[espec]} cadastrados")
             for turno in turnos_dia:
                 cl.append(max(0, 2-turno[0]))
                 p.append(max(0, 1-turno[1]))
@@ -425,6 +433,17 @@ def validacao_diaria(lista,matriz):
             print(f"Você possui {espec_quant[2]} Cirurgiões cadastrados")
             for i in erros:
                 print(erros_dict[i])
+            print("=== Lista de Profissionais Escalados ===")
+            for i in range(len(espec_quant)):
+                if espec_quant[i] == 0:
+                    print(f"Não há {espec_dict[i]} cadastrados neste turno")
+                else:
+                    print(espec_dict[i])
+                    for id in matriz[x][y]:    
+                        if lista[id-1].espec == str(i+1):                     
+                            print(f"ID => {lista[id-1].id}")
+                            print(f"Nome => {lista[id-1].nome}")
+                            print(f"Especialidade => {espec_dict[i]}\n")
             break
         else: 
             print("Opção Inválida") 
