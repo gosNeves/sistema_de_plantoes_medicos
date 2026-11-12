@@ -456,9 +456,106 @@ def contagem_espec(x,y,lista,matriz):
     c = espec.count("3")
     espec_quant = [cl,p,c]
     return espec_quant
-
-#def validacao_semanal(lista,matriz):
-#def media_escalas():
-#def cobertura_turnos():
-#def validação_semana():
+def validacao_semanal(lista,matriz):
+    while True: 
+        print("=== Validações Semanais ===")
+        print("=== Escolha uma opção ===")
+        try:
+            opcao = int(input("(1) => Média de Escalas, (2) => Porcentagem de Turnos Cobertos, (3) => Validação da Semana, (4) => Sair"))
+        except ValueError:
+            print("Valor Inválido")
+            continue
+        if opcao == 1:
+            media_escalas(lista,matriz)
+        elif opcao == 2:
+            cobertura_turnos(lista,matriz)
+        elif opcao == 3:
+            validacao_semana(lista,matriz)
+        elif opcao == 4:
+            break
+        else: 
+            print("Opção Inválida") 
+def media_escalas(lista):
+    espec_dict = {0:"Clínico Geral", 1:"Pediatra", 2:"Cirurgião"}
+    total_atribuicoes = []
+    mais_turnos = []
+    menos_turnos = []
+    for i in range(len(lista)):
+        if lista[i] is not None:
+            total_atribuicoes.append([lista[i].id, sum(lista[i].qtd_t)])
+    if len(total_atribuicoes) > 0:
+        maior = max(i[1] for i in total_atribuicoes)
+        menor = min(i[1] for i in total_atribuicoes)
+    else: 
+        maior = 0
+        menor = 0
+    for i in range(len(total_atribuicoes)):
+        if total_atribuicoes[i][1] == maior:
+            mais_turnos.append(total_atribuicoes[i][0])
+        if total_atribuicoes[i][1] == menor:
+            menos_turnos.append(total_atribuicoes[i][0])
+    total_cadastros = len(total_atribuicoes)
+    total_turnos = sum(i[1] for i in total_atribuicoes)
+    if total_cadastros != 0:
+        media_equipe = total_turnos/total_cadastros
+    else:
+        media_equipe = 0
+    print("=== Média de Escalas ===")
+    print(f"Maior carga de atribuição: {maior} turno(s)")
+    print(f"Menor carga de atribuição: {menor} turno(s)")
+    print(f"Valor médio de atribuições: {media_equipe:.2f} escalas por profissional")
+    print("\nProfissionais com o MAIOR número de escalas atribuídas")
+    for i in range(len(mais_turnos)):
+        print(f"ID => {lista[mais_turnos[i]-1].id}")
+        print(f"Nome => {lista[mais_turnos[i]-1].nome}")
+        print(f"Especialidade => {espec_dict[int(lista[mais_turnos[i]-1].espec)-1]}\n")
+        print(f"Total de Atribuições => {sum(lista[mais_turnos[i]-1].qtd_t)}")
+    print("Profissionais com o MENOR número de escalas atribuídas")
+    for i in range(len(menos_turnos)):
+        print(f"ID => {lista[menos_turnos[i]-1].id}")
+        print(f"Nome => {lista[menos_turnos[i]-1].nome}")
+        print(f"Especialidade => {espec_dict[int(lista[menos_turnos[i]-1].espec)-1]}\n")
+        print(f"Total de Atribuições => {sum(lista[menos_turnos[i]-1].qtd_t)}")
+    if any(sum(medico.qtd_t) > media_equipe for medico in lista if medico is not None):
+        print("Profissionais que ultrapassaram a média de atribuições da equipe:")
+        for i in range(len(total_atribuicoes)):
+            if total_atribuicoes[i][1] > media_equipe:
+                print(f"\nID => {lista[total_atribuicoes[i][0]-1].id}")
+                print(f"Nome => {lista[total_atribuicoes[i][0]-1].nome}")
+                print(f"Especialidade => {espec_dict[int(lista[total_atribuicoes[i][0]-1].espec)-1]}\n")
+                print(f"Total de Atribuições => {sum(lista[total_atribuicoes[i][0]-1].qtd_t)}")
+def cobertura_turnos(lista,matriz):
+    turnos_cobertos = turnos_validos(lista,matriz)
+    turnos_incompletos = 21 - turnos_cobertos
+    porcentagem = (turnos_cobertos/21)*100
+    print(f"{porcentagem:.2f}% da semana com cobertura adequada")
+    print(f"Você tem {turnos_cobertos} turno(s) devidamente coberto(s)")
+    print(f"Você tem {turnos_incompletos} turno(s) sem a cobertura adequada")
+def turnos_validos(lista,matriz):
+    turnos_cobertos = 0
+    for x in range(len(matriz)):
+        for y in range(len(matriz[x])):
+            turno_dia = contagem_espec(x,y,lista,matriz)
+            if turno_dia[0] >= 2 and turno_dia[1] >= 1 and turno_dia[2] >= 1:
+                turnos_cobertos += 1
+    return turnos_cobertos
+def validacao_semana(lista,matriz):
+    dias = {0:"Domingo", 1:"Segunda", 2:"Terça", 3:"Quarta", 4:"Quinta", 5:"Sexta", 6:"Sábado"}
+    turnos = {0:"Manhã", 1:"Tarde", 2:"Noite"}
+    espec_dict = {0:"Clínicos Gerais", 1:"Pediatras", 2:"Cirurgiões"}
+    pendencias = []
+    for x in range(len(matriz)):
+        for y in range(len(matriz[x])):
+            turno_dia = contagem_espec(x,y,lista,matriz)
+            if turno_dia[0] < 2:
+                pendencias.append([x,y,0])
+            if turno_dia[1] < 1:
+                pendencias.append([x,y,1])
+            if turno_dia[2] < 1:
+                pendencias.append([x,y,2])
+    if not pendencias:
+        print("Semana validada com Sucesso! Todos os turnos estão devidamente cobertos!")
+    else:
+        for i in pendencias:
+            print(f"\nErro! Faltam {espec_dict[i[2]]} no turno da {turnos[i[1]]} de {dias[i[0]]}")        
 menu()
