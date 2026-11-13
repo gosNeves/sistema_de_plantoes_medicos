@@ -16,7 +16,7 @@ def menu():
         print("=== Menu Principal ===")
         print("=== Escolha uma opção ===")
         try:
-            opcao = int(input("(1) => Cadastro, (2) => Consulta, (3) => Construção de Escalas, (4) => Menu de Validações, (5) => Encerrar Programa"))
+            opcao = int(input("(1) => Cadastro\n(2) => Consulta\n(3) => Construção de Escalas\n(4) => Menu de Validações\n(5) => Encerrar Programa\n"))
         except ValueError:
             print("Valor Inválido")
             continue
@@ -29,150 +29,150 @@ def menu():
         elif opcao == 4:
             validacao(medicos,semana)
         elif opcao == 5:
-            print("Encerrando Programa")
+            print("\nEncerrando Programa\n")
             break
         else: 
-            print("Opção Inválida")
+            print("\nOpção Inválida\n")
 def cadastro(lista):
-    print("=== Menu de Cadastros ===")
     while True:
-        opcao = input("(1) => Cadastrar médicos, (2) => Excluir cadastros, (3) => Sair")
+        print("\n=== Menu de Cadastros ===")
+        opcao = input("(1) => Cadastrar médicos\n(2) => Excluir cadastros\n(3) => Sair\n")
         continuar = True
         if opcao == "1": 
-            print("=== Cadastramento ===")
+            print("\n=== Cadastramento ===")
             while continuar:
                 for i in range(len(lista)):
                     if lista[i] is None:
-                        nome_med = input("Digite o nome do médico:")
-                        print("Qual a especialidade do médico?")
+                        nome_med = input("\nDigite o nome do médico:\n")
+                        print("\nQual a especialidade do médico?")
                         while True:
-                            espec_med = input("(1) => Clínico Geral, (2) => Pediatra, (3) => Cirurgião")
+                            espec_med = input("(1) => Clínico Geral\n(2) => Pediatra\n(3) => Cirurgião\n")
                             if espec_med in ("1", "2", "3"):
                                 break
                             else:
-                                print("Valor inválido")
+                                print("\nValor inválido\n")
                                 continue
-                        print("Ele tem disponibilidade para escalas no período da MANHÃ?")
+                        print("\nEle tem disponibilidade para escalas no período da MANHÃ?")
                         while True:
-                            disp_m = input("(1) => Sim, (2) => Não")
+                            disp_m = input("(1) => Sim\n(2) => Não\n")
                             if disp_m in ("1", "2"):
                                 break
                             else:
-                                print("Valor inválido")
+                                print("\nValor inválido\n")
                                 continue
-                        print("Ele tem disponibilidade para escalas no período da TARDE?")
+                        print("\nEle tem disponibilidade para escalas no período da TARDE?")
                         while True:
-                            disp_t = input("(1) => Sim, (2) => Não")
+                            disp_t = input("(1) => Sim\n(2) => Não\n")
                             if disp_t in ("1", "2"):
                                 break
                             else:
-                                print("Valor inválido")
+                                print("\nValor inválido\n")
                                 continue
-                        print("Ele tem disponibilidade para escalas no período da NOITE?")
+                        print("\nEle tem disponibilidade para escalas no período da NOITE?")
                         while True:
-                            disp_n = input("(1) => Sim, (2) => Não")
+                            disp_n = input("(1) => Sim\n(2) => Não\n")
                             if disp_n in ("1", "2"):
                                 break
                             else:
-                                print("Valor inválido")
+                                print("\nValor inválido\n")
                                 continue
                         ident = i + 1
                         medico = Medico(ident, nome_med, espec_med, disp_m, disp_t, disp_n)
                         lista[i] = medico
                         break
                 else:
-                    print("Não há espaços livres para novos cadastros")
+                    print("\nNão há espaços livres para novos cadastros\n")
                     break
-                print("Deseja cadastrar outro Médico?")
+                print("\nDeseja cadastrar outro Médico?")
                 while True:
-                    opcao = input("Digite '1' para SIM e '2' para NÃO:").capitalize()
+                    opcao = input("Digite '1' para SIM e '2' para NÃO:\n")
                     if opcao == "1":
                         break
                     elif opcao == "2":
                         continuar = False
                         break
                     else:
-                        print("Opção inválida, digite apenas '1' para SIM ou '2' para NÃO!")
+                        print("\nOpção inválida, digite apenas '1' para SIM ou '2' para NÃO!\n")
                         continue
         elif opcao == "2":
-            print("Exclusão de cadastros")
+            print("\n=== Exclusão de cadastros ===\n")
             while continuar: 
                 try:
-                    opcao = int(input("Digite o ID do cadastro que você quer excluir:"))
+                    opcao = int(input("\nDigite o ID do cadastro que você quer excluir:\n"))
                     i = opcao - 1
                 except ValueError:
-                    print("Valor inválido!")
+                    print("\nValor inválido!\n")
                     continue
                 if i in range(len(lista)):
                     if lista[i] is None:
-                        print("Não existe um cadastro nesta posição")
+                        print("\nNão existe um cadastro nesta posição")
                     elif lista [i] is not None:
                         lista[i] = None
-                        print("Cadastro excluído com sucesso")
+                        print("\nCadastro excluído com sucesso")
                 else:
-                    print("Valor inválido")
-                print("Deseja excluir outro cadastro?")
+                    print("\nValor inválido\n")
+                print("\nDeseja excluir outro cadastro?")
                 while True:
-                    opcao = input("Digite '1' para SIM e '2' para NÃO:").capitalize()
+                    opcao = input("Digite '1' para SIM e '2' para NÃO:\n").capitalize()
                     if opcao == "1":
                         break
                     elif opcao == "2":
                         continuar = False
                         break
                     else:
-                        print("Opção inválida, digite apenas '1' para SIM ou '2' para NÃO!")
+                        print("\nOpção inválida, digite apenas '1' para SIM ou '2' para NÃO\n")
                         continue
         elif opcao == "3":
-            print("Retornando ao menu principal")
+            print("\n=== Retornando ao menu principal ===\n")
             break
         else:
-            print("Opção inválida!")
+            print("\nOpção inválida!\n")
     return lista
 def consulta(lista):
     especialidades = {"1":"Clínico Geral", "2":"Pediatra", "3":"Cirurgião"}
     disponibilidade = {"1":"Sim", "2":"Não"}
     while True:
         try:
-            opcao = int(input("Digite o ID que você quer consultar:"))
+            opcao = int(input("Digite o ID que você quer consultar:\n"))
             break
         except ValueError:
-            print("Valor Inválido")
+            print("\nValor Inválido\n")
             continue
     i = opcao - 1
     if i in range(len(lista)):
         if lista[i] is None:
-            print("Não há cadastros nesta posição")
+            print("\nNão há cadastros nesta posição\n")
         else:
-            print(f"ID => {lista[i].id}")
+            print(f"\nID => {lista[i].id}")
             print(f"Nome => {lista[i].nome}")
             print(f"Especialidade => {especialidades[lista[i].espec]}")
             print(f"Disponível de MANHÃ? => {disponibilidade[lista[i].disp_m]}")
             print(f"Disponível de TARDE? => {disponibilidade[lista[i].disp_t]}")
-            print(f"Disponível de NOITE? => {disponibilidade[lista[i].disp_n]}")
+            print(f"Disponível de NOITE? => {disponibilidade[lista[i].disp_n]}\n")
     else:
-        print("Valor Inválido")
+        print("\nValor Inválido\n")
 def construção(lista, matriz):
-    print("=== Menu de Construção de Turnos ===")
+    print("=== Menu de Construção de Escalas ===")
     while True:
         try:
-            opcao = int(input("(1) => Construir Escalas, (2) => Sair"))
+            opcao = int(input("(1) => Construir Escalas\n(2) => Sair\n"))
         except ValueError:
-            print("Valor inválido")
+            print("\nValor inválido\n")
             continue
         if opcao == 1:
             if any(medico is not None in lista for medico in lista):
                 while True:
                     print("Escolha um dia da semana:")
                     try:
-                        opcao_d = int(input("(1) => Domingo, (2) => Segunda, (3) => Terça, (4) => Quarta, (5) => Quinta, (6) => Sexta, (7) => Sábado"))
+                        opcao_d = int(input("(1) => Domingo\n(2) => Segunda\n(3) => Terça\n(4) => Quarta\n(5) => Quinta\n(6) => Sexta\n(7) => Sábado\n"))
                     except ValueError:
-                        print("Opção inválida")
+                        print("\nOpção inválida\n")
                         continue
-                    print("Escolha um turno:")
+                    print("\nEscolha um turno:")
                     try:
-                        opcao_t = int(input("(1) => Manhã, (2) => Tarde, (3) => Noite"))
+                        opcao_t = int(input("(1) => Manhã\n(2) => Tarde\n(3) => Noite\n"))
                     except ValueError:
-                        print("Opção inválida")
+                        print("\nOpção inválida\n")
                         continue
                     x = opcao_d - 1
                     y = opcao_t - 1
@@ -180,23 +180,23 @@ def construção(lista, matriz):
                     cadastro_escala(x,y,lista,matriz)
                     break
             else:
-                print("Não há cadastros no sistema. Cadastre pelo menos um médico para prosseguir!")
+                print("\nNão há cadastros no sistema. Cadastre pelo menos um médico para prosseguir!\n")
         elif opcao == 2:
-            print("=== Retornando ao menu principal ===")
+            print("\n=== Retornando ao menu principal ===\n")
             break
         else: 
-            print("Opção inválida")
+            print("\nOpção inválida\n")
             continue
 def cadastro_escala(x,y,lista,matriz):
     dias = {0:"Domingo", 1:"Segunda", 2:"Terça", 3:"Quarta", 4:"Quinta", 5:"Sexta", 6:"Sábado"}
     turnos = {0:"Manhã", 1:"Tarde", 2:"Noite"}
     erros_dict = {1:"Erro! Limite diário de escalas excedido.", 2:"Erro! O profissional já está escalado no turno noturno anterior",
              3:"Erro! O profissional já está escalado no turno matutino posterior.", 4:"Erro! Limite semanal de escalas excedido"}
-    print(f"Você está no turno de {dias[x]} no período da {turnos[y]}")
+    print(f"\n=== Você está no turno de {dias[x]} no período da {turnos[y]} ===\n")
     continuar = True
     while continuar:
         if any(medico.espec == "1" and medico.disp_m == "1" for medico in lista if medico is not None):
-            print("Você tem a disposição os seguintes CLÍNICOS GERAIS:")
+            print("Você tem a disposição os seguintes CLÍNICOS GERAIS:\n")
             cont = 0
             for i in range(len(lista)):  
                 if lista[i] is None:
@@ -204,12 +204,12 @@ def cadastro_escala(x,y,lista,matriz):
                 elif lista[i].disp_m == "1" and lista[i].espec == "1":
                     ident = i + 1
                     cont = cont + 1
-                    print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}")
+                    print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}\n")
             while True:
                 try:
-                    id_med = int(input("Digite um ID"))
+                    id_med = int(input("Digite um ID\n"))
                 except ValueError:
-                    print("Valor inválido!")
+                    print("\nValor inválido!\n")
                     continue
                 if id_med > 0 and id_med < 141:
                     erros = checagens(lista,matriz,x,y,id_med)
@@ -221,37 +221,37 @@ def cadastro_escala(x,y,lista,matriz):
                         for i in erros:
                             print(erros_dict[i])
                 else: 
-                    print("Valor Inválido")
-            print("Deseja cadastrar outro CLÍNICO GERAL?")
+                    print("\nValor Inválido\n")
+            print("\nDeseja cadastrar outro CLÍNICO GERAL?\n")
             while True:
-                opcao = input("Digite '1' para SIM e '2' para NÃO:")
+                opcao = input("Digite '1' para SIM e '2' para NÃO:\n")
                 if opcao == "1":
                     break
                 elif opcao == "2":
                     continuar = False
                     break
                 else:
-                    print("Opção inválida, digite apenas '1' para SIM ou '2' para NÃO!")
+                    print("\nOpção inválida, digite apenas '1' para SIM ou '2' para NÃO!\n")
                     continue
         else:
-            print(f"Você não possui Clínicos Gerais disponíveis no período da {turnos[y]}")
+            print(f"\nVocê não possui Clínicos Gerais disponíveis no período da {turnos[y]}\n")
             break
     continuar = True
     while continuar:
         if any(medico.espec == "2" and medico.disp_m == "1" for medico in lista if medico is not None):
-            print("Você tem a disposição os seguintes PEDIATRAS:")
+            print("Você tem a disposição os seguintes PEDIATRAS:\n")
             cont = 0
             for i in range(len(lista)):  
                 if lista[i] is None:
                     continue
                 elif lista[i].disp_m == "1" and lista[i].espec == "2":
                     ident = i + 1
-                    print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}")
+                    print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}\n")
             while True:
                 try:
-                    id_med = int(input("Digite um ID"))
+                    id_med = int(input("Digite um ID\n"))
                 except ValueError:
-                    print("Valor inválido!")
+                    print("\nValor inválido!\n")
                     continue
                 if id_med > 0 and id_med < 141:
                     erros = checagens(lista,matriz,x,y,id_med)
@@ -263,25 +263,25 @@ def cadastro_escala(x,y,lista,matriz):
                         for i in erros:
                             print(erros_dict[i])
                 else: 
-                    print("Valor Inválido")
-            print("Deseja cadastrar outro PEDIATRA?")
+                    print("\nValor Inválido\n")
+            print("\nDeseja cadastrar outro PEDIATRA?\n")
             while True:
-                opcao = input("Digite '1' para SIM e '2' para NÃO:")
+                opcao = input("Digite '1' para SIM e '2' para NÃO:\n")
                 if opcao == "1":
                     break
                 elif opcao == "2":
                     continuar = False
                     break
                 else:
-                    print("Opção inválida, digite apenas '1' para SIM ou '2' para NÃO!")
+                    print("\nOpção inválida, digite apenas '1' para SIM ou '2' para NÃO!\n")
                     continue
         else:
-            print(f"Você não possui Pediatras disponíveis no período da {turnos[y]}")
+            print(f"\nVocê não possui Pediatras disponíveis no período da {turnos[y]}\n")
             break
     continuar = True
     while continuar:
         if any(medico.espec == "3" and medico.disp_m == "1" for medico in lista if medico is not None):
-            print("Você tem a disposição os seguintes CIRURGIÕES:")
+            print("Você tem a disposição os seguintes CIRURGIÕES:\n")
             cont = 0
             for i in range(len(lista)):  
                 if lista[i] is None:
@@ -289,12 +289,12 @@ def cadastro_escala(x,y,lista,matriz):
                 elif lista[i].disp_m == "1" and lista[i].espec == "3":
                     ident = i + 1
                     cont = cont + 1
-                    print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}")
+                    print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}\n")
             while True:
                 try:
-                    id_med = int(input("Digite um ID"))
+                    id_med = int(input("Digite um ID\n"))
                 except ValueError:
-                    print("Valor inválido!")
+                    print("\nValor inválido!\n")
                     continue
                 if id_med > 0 and id_med < 141:
                     erros = checagens(lista,matriz,x,y,id_med)
@@ -306,22 +306,22 @@ def cadastro_escala(x,y,lista,matriz):
                         for i in erros:
                             print(erros_dict[i])
                 else: 
-                    print("Valor Inválido")
+                    print("\nValor Inválido\n")
             print("Deseja cadastrar outro CIRURGIÃO?")
             while True:
-                opcao = input("Digite '1' para SIM e '2' para NÃO:")
+                opcao = input("Digite '1' para SIM e '2' para NÃO:\n")
                 if opcao == "1":
                     break
                 elif opcao == "2":
                     continuar = False
                     break
                 else:
-                    print("Opção inválida, digite apenas '1' para SIM ou '2' para NÃO!")
+                    print("\nOpção inválida, digite apenas '1' para SIM ou '2' para NÃO!\n")
                     continue
         else:
-            print(f"Você não possui Cirurgiões disponíveis no período da {turnos[y]}")
+            print(f"Você não possui Cirurgiões disponíveis no período da {turnos[y]}\n")
             break
-    print("Escala Salva! Retornando ao menu de Construção de Escalas")
+    print("\nEscala Salva! Retornando ao menu de Construção de Escalas\n")
     return matriz
 def checagens(lista,matriz,x,y,id_med):
     erros = [] 
@@ -350,38 +350,38 @@ def validacao(lista,matriz):
         print("=== Menu de Validações ===")
         print("=== Escolha uma opção ===")
         try:
-            opcao = int(input("(1) => Validação Diária, (2) => Validação Semanal, (3) => Sair"))
+            opcao = int(input("(1) => Validação Diária\n(2) => Validação Semanal\n(3) => Sair\n"))
         except ValueError:
-            print("Valor Inválido")
+            print("\nValor Inválido\n")
             continue
         if opcao == 1:
             validacao_diaria(lista,matriz)
         elif opcao == 2:
             validacao_semanal(lista,matriz)
         elif opcao == 3:
-            print("Retornando ao Menu Principal")
+            print("\n=== Retornando ao Menu Principal===\n")
             break
         else: 
-            print("Opção Inválida") 
+            print("\nOpção Inválida\n") 
 def validacao_diaria(lista,matriz):
     dias = {0:"Domingo", 1:"Segunda", 2:"Terça", 3:"Quarta", 4:"Quinta", 5:"Sexta", 6:"Sábado"}
     turnos = {0:"Manhã", 1:"Tarde", 2:"Noite"}
-    erros_dict = {0:"Turno Aprovado", 1:"Erro! Faltam Clinicos Gerais", 2:"Erro! Faltam Pediatras", 3:"Erro! Faltam Cirurgiões", 4:"Plantão 24 Hrs Aprovado!"}
+    erros_dict = {0:"\nTurno Aprovado\n", 1:"Erro! Faltam Clinicos Gerais", 2:"Erro! Faltam Pediatras", 3:"Erro! Faltam Cirurgiões", 4:"Plantão 24 Hrs Aprovado!"}
     espec_dict = {0:"Clínicos Gerais", 1:"Pediatras", 2:"Cirurgiões"}
     erros =[]
     while True: 
         print("=== Validações de Escalas ===")
         print("=== Escolha um dia ===")
         try:
-            x = int(input("(1) => Domingo, (2) => Segunda, (3) => Terça, (4) => Quarta, (5) => Quinta, (6) => Sexta, (7) => Sábado"))
+            x = int(input("(1) => Domingo\n(2) => Segunda\n(3) => Terça\n(4) => Quarta\n(5) => Quinta\n(6) => Sexta\n(7) => Sábado\n"))
         except ValueError:
-            print("Valor Inválido")
+            print("\nValor Inválido\n")
             continue
-        print("=== Qual turno você deseja validar? ===")
+        print("\n=== Qual turno você deseja validar? ===")
         try:
-            y = int(input("(1) => Manhã, (2) => Tarde, (3) => Noite, (4) => Plantão 24 Hrs (3 Turnos Juntos)"))
+            y = int(input("(1) => Manhã\n(2) => Tarde\n(3) => Noite\n(4) => Plantão 24 Hrs (3 Turnos Juntos)\n"))
         except ValueError:
-            print("Valor Inválido")
+            print("\nValor Inválido\n")
             continue
         x = x-1
         y = y-1
@@ -395,9 +395,9 @@ def validacao_diaria(lista,matriz):
             p =[]
             c=[]
             for i in range(len(turnos_dia)):
-                print(f"\nTurno da {turnos[i]}")
+                print(f"\nPlantão da {turnos[i]}\n")
                 if all(j == 0 for j in turnos_dia[i]):
-                    print("O turno não possui profissionais cadastrados")
+                    print("O turno não possui profissionais cadastrados\n")
                 else:
                     for espec in range(len(turnos_dia[i])):
                         print(f"Você possui {turnos_dia[i][espec]} {espec_dict[espec]} cadastrados")
@@ -408,17 +408,17 @@ def validacao_diaria(lista,matriz):
             if any(cl) or any(p) or any(c): 
                 for n in range(3):
                     if cl[n] > 0:
-                        print(f"Erro! Faltam {cl[n]} Clínicos Gerais no turno da {turnos[n]}")
+                        print(f"\nErro! Faltam {cl[n]} Clínicos Gerais no turno da {turnos[n]}")
                     if p[n] > 0:
-                        print(f"Erro! Faltam {p[n]} Pediatras no turno da {turnos[n]}")
+                        print(f"\nErro! Faltam {p[n]} Pediatras no turno da {turnos[n]}")
                     if c[n] > 0:
-                        print(f"Erro! Faltam {c[n]} Cirurgiões no turno da {turnos[n]}")
+                        print(f"\nErro! Faltam {c[n]} Cirurgiões no turno da {turnos[n]}")
             else:
                 print(erros_dict[4])          
             break
         elif y in turnos:
             #Validação do turno específico e impressão de relatórios
-            print(f"Você selecionou o turno de {dias[x]} de {turnos[y]}")
+            print(f"\nVocê selecionou o turno de {dias[x]} de {turnos[y]}\n")
             espec_quant = contagem_espec(x,y,lista,matriz)
             if espec_quant[0] < 2:
                 erros.append(1)
@@ -433,10 +433,10 @@ def validacao_diaria(lista,matriz):
             print(f"Você possui {espec_quant[2]} Cirurgiões cadastrados")
             for i in erros:
                 print(erros_dict[i])
-            print("=== Lista de Profissionais Escalados ===")
+            print("\n=== Lista de Profissionais Escalados ===\n")
             for i in range(len(espec_quant)):
                 if espec_quant[i] == 0:
-                    print(f"Não há {espec_dict[i]} cadastrados neste turno")
+                    print(f"Não há {espec_dict[i]} cadastrados neste turno\n")
                 else:
                     print(espec_dict[i])
                     for id in matriz[x][y]:    
@@ -446,7 +446,7 @@ def validacao_diaria(lista,matriz):
                             print(f"Especialidade => {espec_dict[i]}\n")
             break
         else: 
-            print("Opção Inválida") 
+            print("\nOpção Inválida\n") 
 def contagem_espec(x,y,lista,matriz):
     espec = []
     for id in matriz[x][y]:
@@ -461,12 +461,12 @@ def validacao_semanal(lista,matriz):
         print("=== Validações Semanais ===")
         print("=== Escolha uma opção ===")
         try:
-            opcao = int(input("(1) => Média de Escalas, (2) => Porcentagem de Turnos Cobertos, (3) => Validação da Semana, (4) => Sair"))
+            opcao = int(input("(1) => Média de Escalas\n(2) => Porcentagem de Turnos Cobertos\n(3) => Validação da Semana\n(4) => Sair\n"))
         except ValueError:
-            print("Valor Inválido")
+            print("\nValor Inválido\n")
             continue
         if opcao == 1:
-            media_escalas(lista,matriz)
+            media_escalas(lista)
         elif opcao == 2:
             cobertura_turnos(lista,matriz)
         elif opcao == 3:
@@ -474,7 +474,7 @@ def validacao_semanal(lista,matriz):
         elif opcao == 4:
             break
         else: 
-            print("Opção Inválida") 
+            print("\nOpção Inválida\n") 
 def media_escalas(lista):
     espec_dict = {0:"Clínico Geral", 1:"Pediatra", 2:"Cirurgião"}
     total_atribuicoes = []
@@ -500,37 +500,44 @@ def media_escalas(lista):
         media_equipe = total_turnos/total_cadastros
     else:
         media_equipe = 0
-    print("=== Média de Escalas ===")
+    print("\n=== Média de Escalas ===\n")
     print(f"Maior carga de atribuição: {maior} turno(s)")
     print(f"Menor carga de atribuição: {menor} turno(s)")
     print(f"Valor médio de atribuições: {media_equipe:.2f} escalas por profissional")
     print("\nProfissionais com o MAIOR número de escalas atribuídas")
-    for i in range(len(mais_turnos)):
-        print(f"ID => {lista[mais_turnos[i]-1].id}")
-        print(f"Nome => {lista[mais_turnos[i]-1].nome}")
-        print(f"Especialidade => {espec_dict[int(lista[mais_turnos[i]-1].espec)-1]}\n")
-        print(f"Total de Atribuições => {sum(lista[mais_turnos[i]-1].qtd_t)}")
-    print("Profissionais com o MENOR número de escalas atribuídas")
-    for i in range(len(menos_turnos)):
-        print(f"ID => {lista[menos_turnos[i]-1].id}")
-        print(f"Nome => {lista[menos_turnos[i]-1].nome}")
-        print(f"Especialidade => {espec_dict[int(lista[menos_turnos[i]-1].espec)-1]}\n")
-        print(f"Total de Atribuições => {sum(lista[menos_turnos[i]-1].qtd_t)}")
+    if not mais_turnos:
+        print("Não há nenhuma atribuição de escala na semana")
+    else:
+        for i in range(len(mais_turnos)):
+            print(f"ID => {lista[mais_turnos[i]-1].id}")
+            print(f"Nome => {lista[mais_turnos[i]-1].nome}")
+            print(f"Especialidade => {espec_dict[int(lista[mais_turnos[i]-1].espec)-1]}\n")
+            print(f"Total de Atribuições => {sum(lista[mais_turnos[i]-1].qtd_t)}")
+    print("\nProfissionais com o MENOR número de escalas atribuídas")
+    if not mais_turnos:
+            print("Não há nenhuma atribuição de escala na semana\n")
+    else:
+        for i in range(len(menos_turnos)):
+            print(f"ID => {lista[menos_turnos[i]-1].id}")
+            print(f"Nome => {lista[menos_turnos[i]-1].nome}")
+            print(f"Especialidade => {espec_dict[int(lista[menos_turnos[i]-1].espec)-1]}\n")
+            print(f"Total de Atribuições => {sum(lista[menos_turnos[i]-1].qtd_t)}\n")
     if any(sum(medico.qtd_t) > media_equipe for medico in lista if medico is not None):
-        print("Profissionais que ultrapassaram a média de atribuições da equipe:")
+        print("\nProfissionais que ultrapassaram a média de atribuições da equipe:\n")
         for i in range(len(total_atribuicoes)):
             if total_atribuicoes[i][1] > media_equipe:
                 print(f"\nID => {lista[total_atribuicoes[i][0]-1].id}")
                 print(f"Nome => {lista[total_atribuicoes[i][0]-1].nome}")
                 print(f"Especialidade => {espec_dict[int(lista[total_atribuicoes[i][0]-1].espec)-1]}\n")
-                print(f"Total de Atribuições => {sum(lista[total_atribuicoes[i][0]-1].qtd_t)}")
+                print(f"Total de Atribuições => {sum(lista[total_atribuicoes[i][0]-1].qtd_t)}\n")
 def cobertura_turnos(lista,matriz):
     turnos_cobertos = turnos_validos(lista,matriz)
     turnos_incompletos = 21 - turnos_cobertos
     porcentagem = (turnos_cobertos/21)*100
+    print("=== Cobertura de Turnos ===\n")
     print(f"{porcentagem:.2f}% da semana com cobertura adequada")
     print(f"Você tem {turnos_cobertos} turno(s) devidamente coberto(s)")
-    print(f"Você tem {turnos_incompletos} turno(s) sem a cobertura adequada")
+    print(f"Você tem {turnos_incompletos} turno(s) sem a cobertura adequada\n")
 def turnos_validos(lista,matriz):
     turnos_cobertos = 0
     for x in range(len(matriz)):
@@ -553,9 +560,12 @@ def validacao_semana(lista,matriz):
                 pendencias.append([x,y,1])
             if turno_dia[2] < 1:
                 pendencias.append([x,y,2])
+    print("=== Validação da Semana ===\n")
     if not pendencias:
-        print("Semana validada com Sucesso! Todos os turnos estão devidamente cobertos!")
+        print("Semana validada com Sucesso! Todos os turnos estão devidamente cobertos!\n")
     else:
+        print("Semana inválida!\n")
         for i in pendencias:
-            print(f"\nErro! Faltam {espec_dict[i[2]]} no turno da {turnos[i[1]]} de {dias[i[0]]}")        
+            print(f"Erro! Faltam {espec_dict[i[2]]} no turno da {turnos[i[1]]} de {dias[i[0]]}") 
+    print()       
 menu()
