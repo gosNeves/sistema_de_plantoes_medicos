@@ -181,7 +181,7 @@ def construção(lista, matriz):
                         continue
                     x = opcao_d - 1
                     y = opcao_t - 1
-                    atualizacao(x,y,lista,matriz,operacao=-1,e=0)
+                    atualizacao(x,y,lista,matriz,operacao=-1)
                     cadastro_escala(x,y,lista,matriz)
                     break
             else:
@@ -225,7 +225,7 @@ def cadastro_escala(x,y,lista,matriz):
                     erros = checagens(lista,matriz,x,y,id_med,e)
                     if not erros:
                         matriz[x][y].append(id_med)
-                        atualizacao(x,y,lista,matriz,operacao=1,e=0)
+                        lista[id_med-1].qtd_t[x] += 1
                         break
                     else:
                         for i in erros:
@@ -266,11 +266,11 @@ def cadastro_escala(x,y,lista,matriz):
                     print("\nValor inválido!\n")
                     continue
                 if id_med > 0 and id_med < 141:
-                    e += 1
+                    e = 1
                     erros = checagens(lista,matriz,x,y,id_med,e)
                     if not erros:
                         matriz[x][y].append(id_med)
-                        atualizacao(x,y,lista,matriz,operacao=1,e=1)
+                        lista[id_med-1].qtd_t[x] += 1
                         break
                     else:
                         for i in erros:
@@ -311,11 +311,11 @@ def cadastro_escala(x,y,lista,matriz):
                     print("\nValor inválido!\n")
                     continue
                 if id_med > 0 and id_med < 141:
-                    e += 1
+                    e = 2
                     erros = checagens(lista,matriz,x,y,id_med,e)
                     if not erros:
                         matriz[x][y].append(id_med)
-                        atualizacao(x,y,lista,matriz,operacao=1,e=2)
+                        lista[id_med-1].qtd_t[x] += 1
                         break
                     else:
                         for i in erros:
@@ -367,14 +367,9 @@ def checagens(lista,matriz,x,y,id_med,e):
         if lista[id_med-1].espec != (e+1):
             erros.append(6)
     return erros
-def atualizacao(x,y,lista,matriz,operacao,e):
-    if operacao < 0:
-        for id in matriz[x][y]:
-            lista[id-1].qtd_t[x] += operacao
-    else:
-        for id in matriz[x][y]:
-            if lista[id-1].espec-1 == e:
-                lista[id-1].qtd_t[x] += operacao
+def atualizacao(x,y,lista,matriz,operacao):
+    for id in matriz[x][y]:
+        lista[id-1].qtd_t[x] += operacao
 def validacao(lista,matriz):
     while True: 
         print("=== Menu de Validações ===")
