@@ -10,8 +10,8 @@ médicas.
 O projeto foi concebido baseando-se no contexto de uma atividade de **API
 (Aprendizado por Projeto Integrado)**, proposta acadêmica da Fatec São José 
 dos Campos que busca aproximar os conhecimentos desenvolvidos durante o curso 
-da resolução de problemas por meio de um projeto prático. O desafio que 
-contextualiza o projeto é baseado na atividade proposta ao 1º semestre do 
+da resolução de problemas reais por meio de um projeto prático. O desafio que 
+contextualiza este projeto é baseado na atividade proposta ao 1º semestre do 
 curso de Banco de Dados iniciado no segundo semestre de 2026.
 
 Este repositório representa um **desenvolvimento independente**, realizado 

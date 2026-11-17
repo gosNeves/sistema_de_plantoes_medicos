@@ -46,8 +46,12 @@ def cadastro(lista):
                         nome_med = input("\nDigite o nome do médico:\n")
                         print("\nQual a especialidade do médico?")
                         while True:
-                            espec_med = input("(1) => Clínico Geral\n(2) => Pediatra\n(3) => Cirurgião\n")
-                            if espec_med in ("1", "2", "3"):
+                            try:
+                                espec_med = int(input("(1) => Clínico Geral\n(2) => Pediatra\n(3) => Cirurgião\n"))
+                            except ValueError:
+                                print("Valor Inválido")
+                                continue
+                            if espec_med in (1, 2, 3):
                                 break
                             else:
                                 print("\nValor inválido\n")
@@ -129,7 +133,7 @@ def cadastro(lista):
             print("\nOpção inválida!\n")
     return lista
 def consulta(lista):
-    especialidades = {"1":"Clínico Geral", "2":"Pediatra", "3":"Cirurgião"}
+    especialidades = {1:"Clínico Geral", 2:"Pediatra", 3:"Cirurgião"}
     disponibilidade = {"1":"Sim", "2":"Não"}
     while True:
         try:
@@ -148,7 +152,8 @@ def consulta(lista):
             print(f"Especialidade => {especialidades[lista[i].espec]}")
             print(f"Disponível de MANHÃ? => {disponibilidade[lista[i].disp_m]}")
             print(f"Disponível de TARDE? => {disponibilidade[lista[i].disp_t]}")
-            print(f"Disponível de NOITE? => {disponibilidade[lista[i].disp_n]}\n")
+            print(f"Disponível de NOITE? => {disponibilidade[lista[i].disp_n]}")
+            print(f"Quantidade de TURNOS na semana => {sum(lista[i].qtd_t)} turno(s)\n")
     else:
         print("\nValor Inválido\n")
 def construção(lista, matriz):
@@ -176,7 +181,7 @@ def construção(lista, matriz):
                         continue
                     x = opcao_d - 1
                     y = opcao_t - 1
-                    atualizacao(x,y,lista,matriz,operacao=-1)
+                    atualizacao(x,y,lista,matriz,operacao=-1,e=0)
                     cadastro_escala(x,y,lista,matriz)
                     break
             else:
@@ -188,20 +193,25 @@ def construção(lista, matriz):
             print("\nOpção inválida\n")
             continue
 def cadastro_escala(x,y,lista,matriz):
+    e = 0
     dias = {0:"Domingo", 1:"Segunda", 2:"Terça", 3:"Quarta", 4:"Quinta", 5:"Sexta", 6:"Sábado"}
     turnos = {0:"Manhã", 1:"Tarde", 2:"Noite"}
-    erros_dict = {1:"Erro! Limite diário de escalas excedido.", 2:"Erro! O profissional já está escalado no turno noturno anterior",
-             3:"Erro! O profissional já está escalado no turno matutino posterior.", 4:"Erro! Limite semanal de escalas excedido"}
+    espec_dict = {0:"Clínico Geral", 1:"Pediatra", 2:"Cirurgião"}
+    erros_dict = {1:"Erro! Limite diário de escalas excedido.\n", 2:"Erro! O profissional já está escalado no turno noturno anterior\n",
+             3:"Erro! O profissional já está escalado no turno matutino posterior.\n", 4:"Erro! Limite semanal de escalas excedido\n", 
+             5:"Erro! O profissional já está escalado neste turno\n", 6:"Erro! Especialidade errada\n",
+             7:"Erro! Não há cadastro relacionado a este ID\n"}
+    atributos = {0:"disp_m", 1:"disp_t", 2:"disp_n" }
     print(f"\n=== Você está no turno de {dias[x]} no período da {turnos[y]} ===\n")
     continuar = True
     while continuar:
-        if any(medico.espec == "1" and medico.disp_m == "1" for medico in lista if medico is not None):
+        if any(medico.espec == 1 and getattr(medico, atributos[y]) == "1" for medico in lista if medico is not None):
             print("Você tem a disposição os seguintes CLÍNICOS GERAIS:\n")
             cont = 0
             for i in range(len(lista)):  
                 if lista[i] is None:
                     continue
-                elif lista[i].disp_m == "1" and lista[i].espec == "1":
+                elif getattr(lista[i], atributos[y]) == "1" and lista[i].espec == 1:
                     ident = i + 1
                     cont = cont + 1
                     print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}\n")
@@ -212,17 +222,18 @@ def cadastro_escala(x,y,lista,matriz):
                     print("\nValor inválido!\n")
                     continue
                 if id_med > 0 and id_med < 141:
-                    erros = checagens(lista,matriz,x,y,id_med)
+                    erros = checagens(lista,matriz,x,y,id_med,e)
                     if not erros:
                         matriz[x][y].append(id_med)
-                        atualizacao(x,y,lista,matriz,operacao=1)
+                        atualizacao(x,y,lista,matriz,operacao=1,e=0)
                         break
                     else:
                         for i in erros:
                             print(erros_dict[i])
+                        break
                 else: 
                     print("\nValor Inválido\n")
-            print("\nDeseja cadastrar outro CLÍNICO GERAL?\n")
+            print("Deseja cadastrar outro CLÍNICO GERAL?\n")
             while True:
                 opcao = input("Digite '1' para SIM e '2' para NÃO:\n")
                 if opcao == "1":
@@ -238,14 +249,15 @@ def cadastro_escala(x,y,lista,matriz):
             break
     continuar = True
     while continuar:
-        if any(medico.espec == "2" and medico.disp_m == "1" for medico in lista if medico is not None):
+        if any(medico.espec == 2 and getattr(medico, atributos[y]) == "1" for medico in lista if medico is not None):
             print("Você tem a disposição os seguintes PEDIATRAS:\n")
             cont = 0
             for i in range(len(lista)):  
                 if lista[i] is None:
                     continue
-                elif lista[i].disp_m == "1" and lista[i].espec == "2":
+                elif getattr(lista[i], atributos[y]) == "1" and lista[i].espec == 2:
                     ident = i + 1
+                    cont += 1
                     print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}\n")
             while True:
                 try:
@@ -254,14 +266,16 @@ def cadastro_escala(x,y,lista,matriz):
                     print("\nValor inválido!\n")
                     continue
                 if id_med > 0 and id_med < 141:
-                    erros = checagens(lista,matriz,x,y,id_med)
+                    e += 1
+                    erros = checagens(lista,matriz,x,y,id_med,e)
                     if not erros:
                         matriz[x][y].append(id_med)
-                        atualizacao(x,y,lista,matriz,operacao=1)
+                        atualizacao(x,y,lista,matriz,operacao=1,e=1)
                         break
                     else:
                         for i in erros:
                             print(erros_dict[i])
+                        break
                 else: 
                     print("\nValor Inválido\n")
             print("\nDeseja cadastrar outro PEDIATRA?\n")
@@ -280,13 +294,13 @@ def cadastro_escala(x,y,lista,matriz):
             break
     continuar = True
     while continuar:
-        if any(medico.espec == "3" and medico.disp_m == "1" for medico in lista if medico is not None):
+        if any(medico.espec == 3 and getattr(medico, atributos[y]) == "1" for medico in lista if medico is not None):
             print("Você tem a disposição os seguintes CIRURGIÕES:\n")
             cont = 0
             for i in range(len(lista)):  
                 if lista[i] is None:
                     continue
-                elif lista[i].disp_m == "1" and lista[i].espec == "3":
+                elif getattr(lista[i], atributos[y]) == "1" and lista[i].espec == 3:
                     ident = i + 1
                     cont = cont + 1
                     print(f"Profissional nº{cont}:\nID => {ident}\nNome => {lista[i].nome}\n")
@@ -297,14 +311,16 @@ def cadastro_escala(x,y,lista,matriz):
                     print("\nValor inválido!\n")
                     continue
                 if id_med > 0 and id_med < 141:
-                    erros = checagens(lista,matriz,x,y,id_med)
+                    e += 1
+                    erros = checagens(lista,matriz,x,y,id_med,e)
                     if not erros:
                         matriz[x][y].append(id_med)
-                        atualizacao(x,y,lista,matriz,operacao=1)
+                        atualizacao(x,y,lista,matriz,operacao=1,e=2)
                         break
                     else:
                         for i in erros:
                             print(erros_dict[i])
+                        break
                 else: 
                     print("\nValor Inválido\n")
             print("Deseja cadastrar outro CIRURGIÃO?")
@@ -323,28 +339,42 @@ def cadastro_escala(x,y,lista,matriz):
             break
     print("\nEscala Salva! Retornando ao menu de Construção de Escalas\n")
     return matriz
-def checagens(lista,matriz,x,y,id_med):
+def checagens(lista,matriz,x,y,id_med,e):
     erros = [] 
     prox_dia = (x+1)%7
     dia_ant = (6+x)%7
-    total_semana = sum(lista[id_med-1].qtd_t)
-    #1 No máximo 2 turnos no mesmo dia
-    if lista[id_med-1].qtd_t[x] >= 2:
-        erros.append(1)        
-    #2 Turno noturno não pode ser seguido de matutino e vice-versa
-    if y == 0: 
-        if id_med in matriz[dia_ant][2] and id_med in matriz[x][0]:
-            erros.append(2)
-    elif y == 2:
-        if id_med in matriz[x][2] and id_med in matriz[prox_dia][0]:
-            erros.append(3)
-    #3 Máximo de 8 turnos na semana
-    if total_semana >= 8:
-        erros.append(4)
+    if lista[id_med-1] is None:
+        erros.append(7)
+    else:
+        total_semana = sum(lista[id_med-1].qtd_t)
+        #1 No máximo 2 turnos no mesmo dia
+        if lista[id_med-1].qtd_t[x] >= 2:
+            erros.append(1)        
+        #2 Turno noturno não pode ser seguido de matutino e vice-versa
+        if y == 0: 
+            if id_med in matriz[dia_ant][2] and id_med in matriz[x][0]:
+                erros.append(2)
+        elif y == 2:
+            if id_med in matriz[x][2] and id_med in matriz[prox_dia][0]:
+                erros.append(3)
+        #3 Máximo de 8 turnos na semana
+        if total_semana >= 8:
+            erros.append(4)
+        #4 Médico já cadastrado no turno
+        if id_med in matriz[x][y]:
+            erros.append(5)
+        #5 Especialidade diferente da solicitada
+        if lista[id_med-1].espec != (e+1):
+            erros.append(6)
     return erros
-def atualizacao(x,y,lista,matriz,operacao):
-    for id in matriz[x][y]:
-        lista[id-1].qtd_t[x] += operacao
+def atualizacao(x,y,lista,matriz,operacao,e):
+    if operacao < 0:
+        for id in matriz[x][y]:
+            lista[id-1].qtd_t[x] += operacao
+    else:
+        for id in matriz[x][y]:
+            if lista[id-1].espec-1 == e:
+                lista[id-1].qtd_t[x] += operacao
 def validacao(lista,matriz):
     while True: 
         print("=== Menu de Validações ===")
@@ -383,8 +413,8 @@ def validacao_diaria(lista,matriz):
         except ValueError:
             print("\nValor Inválido\n")
             continue
-        x = x-1
-        y = y-1
+        x -= 1
+        y -= 1
         if y == 3:
             #Validação do Plantão 24 Hrs
             turno_M = contagem_espec(x,0,lista,matriz)
@@ -440,7 +470,7 @@ def validacao_diaria(lista,matriz):
                 else:
                     print(espec_dict[i])
                     for id in matriz[x][y]:    
-                        if lista[id-1].espec == str(i+1):                     
+                        if lista[id-1].espec == i+1:                     
                             print(f"ID => {lista[id-1].id}")
                             print(f"Nome => {lista[id-1].nome}")
                             print(f"Especialidade => {espec_dict[i]}\n")
@@ -451,9 +481,9 @@ def contagem_espec(x,y,lista,matriz):
     espec = []
     for id in matriz[x][y]:
         espec.append(lista[id-1].espec)
-    cl = espec.count("1")
-    p = espec.count("2")
-    c = espec.count("3")
+    cl = espec.count(1)
+    p = espec.count(2)
+    c = espec.count(3)
     espec_quant = [cl,p,c]
     return espec_quant
 def validacao_semanal(lista,matriz):
@@ -511,7 +541,7 @@ def media_escalas(lista):
         for i in range(len(mais_turnos)):
             print(f"ID => {lista[mais_turnos[i]-1].id}")
             print(f"Nome => {lista[mais_turnos[i]-1].nome}")
-            print(f"Especialidade => {espec_dict[int(lista[mais_turnos[i]-1].espec)-1]}\n")
+            print(f"Especialidade => {espec_dict[lista[mais_turnos[i]-1].espec-1]}\n")
             print(f"Total de Atribuições => {sum(lista[mais_turnos[i]-1].qtd_t)}")
     print("\nProfissionais com o MENOR número de escalas atribuídas")
     if not mais_turnos:
@@ -520,7 +550,7 @@ def media_escalas(lista):
         for i in range(len(menos_turnos)):
             print(f"ID => {lista[menos_turnos[i]-1].id}")
             print(f"Nome => {lista[menos_turnos[i]-1].nome}")
-            print(f"Especialidade => {espec_dict[int(lista[menos_turnos[i]-1].espec)-1]}\n")
+            print(f"Especialidade => {espec_dict[lista[menos_turnos[i]-1].espec-1]}\n")
             print(f"Total de Atribuições => {sum(lista[menos_turnos[i]-1].qtd_t)}\n")
     if any(sum(medico.qtd_t) > media_equipe for medico in lista if medico is not None):
         print("\nProfissionais que ultrapassaram a média de atribuições da equipe:\n")
@@ -528,7 +558,7 @@ def media_escalas(lista):
             if total_atribuicoes[i][1] > media_equipe:
                 print(f"\nID => {lista[total_atribuicoes[i][0]-1].id}")
                 print(f"Nome => {lista[total_atribuicoes[i][0]-1].nome}")
-                print(f"Especialidade => {espec_dict[int(lista[total_atribuicoes[i][0]-1].espec)-1]}\n")
+                print(f"Especialidade => {espec_dict[lista[total_atribuicoes[i][0]-1].espec-1]}\n")
                 print(f"Total de Atribuições => {sum(lista[total_atribuicoes[i][0]-1].qtd_t)}\n")
 def cobertura_turnos(lista,matriz):
     turnos_cobertos = turnos_validos(lista,matriz)
